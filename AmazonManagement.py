@@ -63,11 +63,7 @@ class AmazonManagement():
         for i in range(self.__DSMembers.size):
             self.deliverPackages(self.__DSMembers.getAt(i))
             
-    def removeDSmember(self,distributor):
-        #----------------------
-        distributor = DSMember()
-        #----------------------
-        
+    def removeDSmember(self,distributor):        
         if distributor.packetSize != 0:
             for _ in range(distributor.__packets.size):
                 current_packet = distributor.__packets.removeFirst
