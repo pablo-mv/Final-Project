@@ -30,8 +30,8 @@ class DList:
             self.addFirst(e)
         else:
             newNode = DNode(e)
-            newNode.prev = self.tail
             self.tail.next = newNode
+            newNode.prev = self.tail
             self.tail = newNode
             self.size = self.size + 1
             
@@ -73,17 +73,17 @@ class DList:
         return r
     
     def contains(self,e):
-        r = -1
-        con = True
-        i = 1
+        con = False
+        if self.isEmpty():
+            return con
         currentNode = self.head
-        while i <= self.size and con:
+        while currentNode.next != None and not con:
             if currentNode.elem == e:
-                con = False
-                r = currentNode.elem
+                return True
             currentNode = currentNode.next
-            i = i + 1
-        return r
+        if currentNode.elem == e:
+            return True
+        return con
     
     def insertAt(self,n,e):
         if n == 1:
@@ -103,11 +103,11 @@ class DList:
             currentNode.next = newNode
             self.size = self.size + 1
             
-    def removeAr(self,n):
+    def removeAt(self,n):
         if n == 1:
-            r = self.removeFirst
+            r = self.removeFirst()
         elif n == self.size:
-            r = self.removeLast
+            r = self.removeLast()
         else:
             i = 1
             currentNode = self.head
@@ -120,7 +120,16 @@ class DList:
             self.size = self.size - 1
         return r
                 
-            
-            
+    def __str__(self):
+        s = '<'
+        if self.isEmpty():
+            s += '>'
+        else:
+            currentNode = self.head
+            while currentNode.next != None:
+                s += str(currentNode.elem) + ', '
+                currentNode = currentNode.next
+            s += str(currentNode.elem)  + '>'
+        return s
         
     

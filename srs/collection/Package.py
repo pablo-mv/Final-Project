@@ -1,6 +1,11 @@
-from address import address
+import sys
+sys.path.append('../../')
+
+from srs.collection.address import address
 
 class Packet():
+
+    
     def __init__(self, number1, number2, number3, add_name, add_number, post_code, number_errors = 0):
         if isinstance(number1, int) and len(str(number1)) == 3:
             self.__number1 = number1
@@ -26,9 +31,14 @@ class Packet():
         self.__address = address(add_name,add_number)
         self.__error = number_errors
 
+    def __str__(self):
+        s = '\nId: ' + str(self.__number1) + "-" + str(self.__number2) + "-" + str(self.__number3) + '\n'
+        s += 'Directioin: ' + str(self.__address) +', '+ str(self.post_code) +'\n' 
+        s += 'Errors: ' + str(self.error) 
+        return s
         
     def number(self):
-        s = str(self.__number1) + "-" + str(self.__number2) + "-" + str(self.__number3) + "-" + str(self.__number4)
+        s = str(self.__number1) + "-" + str(self.__number2) + "-" + str(self.__number3)
         return s
     
     def add_error(self):
@@ -41,6 +51,7 @@ class Packet():
     @property
     def error(self):
         return self.__error
+    
     
     
     

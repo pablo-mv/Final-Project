@@ -11,6 +11,18 @@ class DSMembers:
         self.head = None
         self.tail = None
         self.size = 0
+    
+    def __str__(self):
+        s = '<'
+        if self.isEmpty():
+            s += '>'
+        else:
+            currentNode = self.head
+            while currentNode.next != None:
+                s += str(currentNode.elem) + ', '
+                currentNode = currentNode.next
+            s += str(currentNode.elem)  + '>'
+        return s
         
     def isEmpty(self):
         return self.size == 0
@@ -64,12 +76,15 @@ class DSMembers:
     
     def getAt(self,n):
         r = None
-        if n <= self.size:
+        if n == 0:
+            r = self.head.elem
+        elif n <= self.size:
             currentNode = self.head
-            i = 0
+            i = 1
             while i < n:
                 currentNode = currentNode.next
                 i = i + 1
+            
             r = currentNode.elem
         return r
     
@@ -89,7 +104,7 @@ class DSMembers:
     def insertAt(self,n,e):
         if n == 1:
             self.addFirst(e)
-        elif n == self.size:
+        elif n >= self.size:
             self.addLast(e)
         else:
             newNode = DNode(e)
@@ -106,9 +121,9 @@ class DSMembers:
             
     def removeAt(self,n):
         if n == 1:
-            r = self.removeFirst
+            r = self.removeFirst()
         elif n == self.size:
-            r = self.removeLast
+            r = self.removeLast()
         else:
             i = 1
             currentNode = self.head
@@ -122,16 +137,68 @@ class DSMembers:
         return r
                 
     def sortAlphabeticalSurname(self):
+        
+        for _ in range(self.size):
+            try:
+                currentNode = self.head
+                nextNode = self.head.next
+                i = 0
+                if nextNode != None:
+                    while nextNode.next != None:
+                        i = 0
+                        while currentNode.elem.fullname()[i] == nextNode.elem.fullname()[i] and i <min(len(currentNode.elem.fullname()), len(nextNode.elem.fullname())-1):
+                            i += 1
+                        
+                        if currentNode.elem.fullname()[i] > nextNode.elem.fullname()[i]:
+                            aux = currentNode.elem
+                            currentNode.elem = nextNode.elem
+                            nextNode.elem = aux
+                        currentNode = nextNode
+                        nextNode = nextNode.next
+                    
+                    if currentNode.elem.fullname()[i] > nextNode.elem.fullname()[i]:
+                        aux = currentNode.elem
+                        currentNode.elem = nextNode.elem
+                        nextNode.elem = aux
+            except:
+                pass
+            
+                
+    def removeById(self, identifier):
+        r = None
+        
+        if self.head.elem.identifier == identifier:
+            r = self.removeFirst()
+        
+        elif self.tail.elem.identifier == identifier:
+            r = self.removeLast()
+        elif self.head !=None:
+            currentNode = self.head
+            while currentNode.next != None and r == None:
+                if currentNode.elem.identifier == identifier:
+                    r = currentNode.elem
+                    currentNode.prev.next = currentNode.next
+                    currentNode.next.prev = currentNode.prev
+                else:
+                    currentNode = currentNode.next
+        return r
+                
+        
+            
+        """  Wasent working, tried to find the problem but I couldnt. Used another way
         currentNode = None
         nextNode = self.head
         for _ in range(self.size):
+            
             currentNode = nextNode
             nextNode = currentNode.next
             con = False # Is this link sorted
+            
             while not con and currentNode.prev != None:
                 con = True
-                currentSurname = currentNode.elem.surname()
-                prevSurname = currentNode.prev.elem.surname()
+                currentSurname = currentNode.elem.surname
+                prevSurname = currentNode.prev.elem.surname
+                print(currentSurname)
                 if currentSurname[0] < prevSurname[0]:
                     con = False
                     currentNext = currentNode.next                    
@@ -142,7 +209,7 @@ class DSMembers:
                     currentNode.prev = prevPrev
                 elif currentSurname[0] == prevSurname[0]: #In case two surnames start the same way
                     i = 0
-                    while currentSurname[i] == prevSurname[i]:
+                    while currentSurname[i] == prevSurname[i] and i < len(currentSurname)-1:
                         i = i + 1
                     if currentSurname[i] < prevSurname[i]:
                         con = False
@@ -151,4 +218,4 @@ class DSMembers:
                         currentNode.prev.next = currentNext
                         currentNode.prev.prev = currentNode
                         currentNode.next = currentNode.prev
-                        currentNode.prev = prevPrev
+                        currentNode.prev = prevPrev"""

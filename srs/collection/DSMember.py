@@ -1,19 +1,9 @@
-from DoublyLinkedList import DList
+import sys
+sys.path.append('../')
+from srs.collection.DoublyLinkedList import DList
 
 class DSMember():
-    """
-    Atributes:
-        identifier: Stores an identifier must have the following format: RXXXXXX where X can be any digit
-        name: Stores the name
-        surname: "" "" surname
-        status: Stores whether the member is 'active' or 'inactive'
-        __zones: (Dlist) Contains the zones the member has assignated
-        __packets: (DList) Contains the list of packets to be delivered
-    Methods:
-        assign_zone(self, zones)
-        assign_packet(self, packet)
-        deliver_packet(self)
-    """
+  
     def __init__(self, ident, name, surname, status):
         if isinstance(ident, int) and len(str(ident)) <= 6:
             ceros_extra = 6 - len(str(ident))
@@ -28,16 +18,26 @@ class DSMember():
         self.__status = status
         self.__zones = DList()
         self.__packets = DList()
+    
+    def __str__(self):
+        s = 'Id: ' + self.__identifier + '\n'
+        s += 'Name: ' + self.__name + '\n'
+        s += 'Surname: ' + self.__surname +'\n'
+        s += 'Status: ' + self.__status  + '\n'
+        s += 'Zones: ' + str(self.__zones) + '\n'
+        s += 'Packets: ' + str(self.__packets)[1:-1] + '\n'
+        return s
         
+       
     def assing_zone(self, zones):
         if isinstance(zones, int):
             self.__zones.addLast(zones)
+            
         else:
             print("Error - postal code must be a number")
             
     def assign_packet(self, packet):
         self.__packets.addLast(packet)
-        
     def deliver_packet(self):
         return self.__packets.removeFirst()
 
@@ -52,7 +52,7 @@ class DSMember():
     @property
     def surname(self):
         return self.__surname
-    
+        
     def fullname(self):
         s = self.__surname + " "  + self.__name 
         return s
@@ -60,10 +60,16 @@ class DSMember():
     @property
     def status(self):
         return self.__status
+    @status.setter
+    def status(self, newStatus):
+        self.__status = newStatus
     
     @property
     def zones(self):
         return self.__zones
     
     def packetSize(self):
-        return self.__packets.size()
+        return self.__packets.size
+    
+    def getPacket(self, idx):
+        return self.__packets.getAt(idx)
