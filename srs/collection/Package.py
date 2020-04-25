@@ -4,7 +4,18 @@ sys.path.append('../../')
 from srs.collection.address import address
 
 class Packet():
-
+    """
+    Creates a package with an identifier based on XXX-XXXXXX-XXXXXX, with X being a digit
+    Atributes
+    post_code: Contains the postal code
+    error: Contains the errors
+    __number1, __number2, __number3: Contain the numbers of the identifier
+    __adress: Constains the object type addressz
+    Methods
+    number: returns the identifier of the package
+    add_error: 
+    
+    """
     
     def __init__(self, number1, number2, number3, add_name, add_number, post_code, number_errors = 0):
         if isinstance(number1, int) and len(str(number1)) == 3:
@@ -38,10 +49,18 @@ class Packet():
         return s
         
     def number(self):
+        """
+        Returns the id of the packet
+        Best and worst case: O(1)
+        """
         s = str(self.__number1) + "-" + str(self.__number2) + "-" + str(self.__number3)
         return s
     
     def add_error(self):
+        """
+        Increases 1 to the number of errors
+        Best and worst case: O(1)
+        """
         self.__error = self.__error + 1
     
     @property

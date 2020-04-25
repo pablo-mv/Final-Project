@@ -25,9 +25,19 @@ class DSMembers:
         return s
         
     def isEmpty(self):
+        """
+        Returns True if there are not DSMember and False otherwise
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(1)
+        """
         return self.size == 0
         
     def addFirst(self,e):
+        """
+        Inserts a DSMember in the first place
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(1)
+        """
         newNode = DNode(e)
         if self.isEmpty():
             self.tail = newNode
@@ -39,6 +49,11 @@ class DSMembers:
         self.size = self.size + 1
             
     def addLast(self,e):
+        """
+        Inserts a DSMember in the last place
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(1)
+        """
         if self.isEmpty():
             self.addFirst(e)
         else:
@@ -49,6 +64,11 @@ class DSMembers:
             self.size = self.size + 1
             
     def removeFirst(self):
+        """
+        Removes the first DSMmber and returns it.
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(1)
+        """
         r = None
         if not self.isEmpty():
             r = self.head.elem
@@ -62,6 +82,11 @@ class DSMembers:
         return r
     
     def removeLast(self):
+        """
+        Removes the last DSMember and returns it.
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(1)
+        """
         r = None
         if not self.isEmpty():
             r = self.tail.elem
@@ -75,6 +100,11 @@ class DSMembers:
         return r
     
     def getAt(self,n):
+        """
+        Returns the element of the node of the index given
+        Complexity Worse Case: O(n)
+        Complexity Best Case: O(1)
+        """
         r = None
         if n == 0:
             r = self.head.elem
@@ -89,6 +119,11 @@ class DSMembers:
         return r
     
     def contains(self,e):
+        """
+        Returns True if the list contains the DSMember, false otherwise
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(n)
+        """
         r = -1
         con = True
         i = 0
@@ -102,6 +137,11 @@ class DSMembers:
         return r
     
     def insertAt(self,n,e):
+        """
+        Inserts a DSMember in the position n
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(n)
+        """
         if n == 1:
             self.addFirst(e)
         elif n >= self.size:
@@ -120,6 +160,11 @@ class DSMembers:
             self.size = self.size + 1
             
     def removeAt(self,n):
+        """
+        Removes the DSMember of the position n and returns it.
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(n)
+        """
         if n == 1:
             r = self.removeFirst()
         elif n == self.size:
@@ -137,7 +182,11 @@ class DSMembers:
         return r
                 
     def sortAlphabeticalSurname(self):
-        
+        """
+        Is a kind of bubble sort with letters.
+        Complexity Worse Case: O(n^2)
+        Complexity Best Case: O(n^2)
+        """
         for _ in range(self.size):
             try:
                 currentNode = self.head
@@ -148,6 +197,10 @@ class DSMembers:
                         i = 0
                         while currentNode.elem.fullname()[i] == nextNode.elem.fullname()[i] and i <min(len(currentNode.elem.fullname()), len(nextNode.elem.fullname())-1):
                             i += 1
+                            """
+                            If the names are repeated, it iterates until get 
+                            an index with a letter diferent or reaching the max size
+                            """
                         
                         if currentNode.elem.fullname()[i] > nextNode.elem.fullname()[i]:
                             aux = currentNode.elem
@@ -165,8 +218,12 @@ class DSMembers:
             
                 
     def removeById(self, identifier):
-        r = None
-        
+        """
+        Removes a DSMember with the identifier the member has. And returns it.
+        Complexity Best Case: O(1)
+        Complexity Worst Case: O(n)
+        """
+        r = None 
         if self.head.elem.identifier == identifier:
             r = self.removeFirst()
         
@@ -183,39 +240,3 @@ class DSMembers:
                     currentNode = currentNode.next
         return r
                 
-        
-            
-        """  Wasent working, tried to find the problem but I couldnt. Used another way
-        currentNode = None
-        nextNode = self.head
-        for _ in range(self.size):
-            
-            currentNode = nextNode
-            nextNode = currentNode.next
-            con = False # Is this link sorted
-            
-            while not con and currentNode.prev != None:
-                con = True
-                currentSurname = currentNode.elem.surname
-                prevSurname = currentNode.prev.elem.surname
-                print(currentSurname)
-                if currentSurname[0] < prevSurname[0]:
-                    con = False
-                    currentNext = currentNode.next                    
-                    prevPrev = currentNode.next.next
-                    currentNode.prev.next = currentNext
-                    currentNode.prev.prev = currentNode
-                    currentNode.next = currentNode.prev
-                    currentNode.prev = prevPrev
-                elif currentSurname[0] == prevSurname[0]: #In case two surnames start the same way
-                    i = 0
-                    while currentSurname[i] == prevSurname[i] and i < len(currentSurname)-1:
-                        i = i + 1
-                    if currentSurname[i] < prevSurname[i]:
-                        con = False
-                        currentNext = currentNode.next                    
-                        prevPrev = currentNode.next.next
-                        currentNode.prev.next = currentNext
-                        currentNode.prev.prev = currentNode
-                        currentNode.next = currentNode.prev
-                        currentNode.prev = prevPrev"""

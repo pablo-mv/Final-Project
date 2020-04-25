@@ -1,6 +1,3 @@
-import sys
-sys.path.append('../')
-
 from srs.collection.DSMembers import DSMembers
 from srs.collection.DoublyLinkedList import DList
 from srs.collection.Delivered import Delivered
@@ -9,6 +6,13 @@ from random import randint
 
 
 class AmazonManagement():
+    """
+    Atributes:
+        __Delivered: DList which stores Deliverd objects which contains the id of the package and of the deliverer
+        __Incidents: DList which stores Incidents objects
+        __Orders: Stores the packages which had not been assignated to a deliverer yet
+        __DSMembers: DList which stores all the DSMember (The deliverers)
+    """
     def __init__(self):
         self.__Delivered = DList()
         self.__Incidents = DList()
@@ -16,26 +20,46 @@ class AmazonManagement():
         self.__DSMembers = DSMembers()
     
     def loadOrders(self, orders):
+        """
+        Takes a DList of pakages and store them in an internal list
+        Complexity Worse Case: O(n)
+        Complexity Best Case: O(n)
+        """
         for i in range(orders.size):
             self.__Orders.addLast(orders.removeFirst())
           
     def loadDSMembers(self, members):
+        """
+        Takes a DList of DMember and store them in a DMembers list
+        Complexity Worse Case: O(n)
+        Complexity Best Case: O(n)
+        """
         for i in range(members.size):
             self.__DSMembers.addLast(members.removeFirst())
                    
     def showDSMember(self):
-        self.__DSMembers.sortAlphabeticalSurname()
+        """
+        First, orders alphabhetically by surname, then print the data of every
+        DSMember
+        Complexity Worse Case: O(n^2)
+        Complexity Best Case: O(n^2)
+        """
+        self.__DSMembers.sortAlphabeticalSurname()  # n^2
         for i in range(self.__DSMembers.size):
             currentName = self.__DSMembers.getAt((i+1)%self.__DSMembers.size)
             print(currentName, end = '\n\n')
-    @property
-    def orders(self):
-        return self.__Orders
+
     def assignDistribution(self): 
-        for _ in range(self.__Orders.size): #__packets
-            current_packet = self.__Orders.removeFirst()# __packets
+        """
+        Takes all the packages stored and assign them to all the delivery staff.
+        
+        Complexity Worse Case: O(n^3)
+        Complexity Best Case: O(n^2)
+        """
+        for _ in range(self.__Orders.size):
+            current_packet = self.__Orders.removeFirst()
             i = 1
-            indx_member_size = [-1,999999] # Changes if we find a member active with space
+            indx_member_size = [-1,999999]
             con = False
             n = self.__DSMembers.size
             while i <=n:
@@ -50,7 +74,7 @@ class AmazonManagement():
                 i += 1
                 self.__DSMembers.addLast(current_staff)
                 
-            if indx_member_size[0] != -1 and not con:
+            if indx_member_size[0] != -1 and not con:  # could be n
                 staff_free = self.__DSMembers.removeAt((indx_member_size[0]))
                 staff_free.assing_zone(current_packet.post_code)
                 staff_free.assign_packet(current_packet)
@@ -59,7 +83,18 @@ class AmazonManagement():
             
 
                 
-    def deliverPackages(self,distributor): #Can not work with a distributor of the list alone. It requires deliver() in order to do so.
+    def deliverPackages(self,distributor):
+        """
+        Simulates the delivery of a packet. It has 1/2 of probability of being 
+        delivered and 1/2 of not. The attept is done 3 times. If it fails. It is 
+        stored as an Incidents. If it success, it is stored as a Delivered.
+        It takes a DSMember, but in order to make it work with all the list of 
+        members we need to use deliver(). Otherwise it is very difficult to update
+        the DSMembers
+        
+        Complexity Worse Case: O(n)
+        Complexity Best Case: O(n)
+        """
         i = 0
         size = distributor.packetSize()
         
@@ -83,15 +118,26 @@ class AmazonManagement():
         
             
     def deliver(self):
+        """
+        Takes every DSMember and deliver its packages
+        Complexity Worse Case: O(n^2)
+        Complexity Best Case: O(n^2)
+        """
         for i in range(self.__DSMembers.size):
             member = self.__DSMembers.removeFirst()
             updated_member = self.deliverPackages(member)
             self.__DSMembers.addLast(updated_member)
             
-    def removeDSMember(self,identifier):  
-        distributor = self.__DSMembers.removeById(identifier)
+    def removeDSMember(self,identifier):
+        """
+        Set to Inactive a DSMember using the identifier it has.
+        And assigns the DMember's packages to the others DSMember
+        Complexity Worse Case: O(n)
+        Complexity Best Case: O(1)
+        """
+        distributor = self.__DSMembers.removeById(identifier) #w n, b 1
         distributor.status = 'Inactive'
-        if distributor.packetSize != 0:
+        if distributor.packetSize != 0: #w n, b 1
             for _ in range(distributor.packetSize()):
                 current_packet = distributor.deliver_packet()
                 con = False

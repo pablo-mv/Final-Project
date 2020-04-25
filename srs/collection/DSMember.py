@@ -1,9 +1,17 @@
 import sys
-sys.path.append('../')
+sys.path.append('../../')
 from srs.collection.DoublyLinkedList import DList
 
 class DSMember():
-  
+    """
+    Atributes:
+        identifier: Stores an identifier must have the following format: RXXXXXX where X can be any digit
+        name: Stores the name
+        surname: "" "" surname
+        status: Stores whether the member is 'active' or 'inactive'
+        __zones: (Dlist) Contains the zones the member has assignated
+        __packets: (DList) Contains the list of packets to be delivered
+    """
     def __init__(self, ident, name, surname, status):
         if isinstance(ident, int) and len(str(ident)) <= 6:
             ceros_extra = 6 - len(str(ident))
@@ -20,6 +28,11 @@ class DSMember():
         self.__packets = DList()
     
     def __str__(self):
+        """
+        Gives the data of the DSMember for printing
+        Worse case: O(1)
+        Best case: O(1)
+        """
         s = 'Id: ' + self.__identifier + '\n'
         s += 'Name: ' + self.__name + '\n'
         s += 'Surname: ' + self.__surname +'\n'
@@ -30,6 +43,11 @@ class DSMember():
         
        
     def assing_zone(self, zones):
+        """
+        Stores a postal code into a DList
+        Complexity Worse Case: O(n)
+        Complexity Best Case: O(1)
+        """
         if isinstance(zones, int):
             self.__zones.addLast(zones)
             
@@ -37,10 +55,46 @@ class DSMember():
             print("Error - postal code must be a number")
             
     def assign_packet(self, packet):
+        """
+        Stores a package into a DList
+        Complexity Worse Case: O(n)
+        Complexity Best Case: O(1)
+        """
         self.__packets.addLast(packet)
+        
     def deliver_packet(self):
+        """
+        Simulates the delivery of a packet
+        Complexity Worse Case: O(1)
+        Complexity Best Case: O(1)
+        """
         return self.__packets.removeFirst()
 
+    def fullname(self):
+        """
+        Returns the fullname of a DSMember (surname name)
+        Complexity Worse Case: O(1)
+        Complexity Best Case: O(1)
+        """
+        s = self.__surname + " "  + self.__name 
+        return s
+    
+    def packetSize(self):
+        """
+        Returns the number of packages the current DSMember has.
+        Complexity Worse Case: O(1)
+        Complexity Best Case: O(1)
+        """
+        return self.__packets.size
+    
+    def getPacket(self, idx):
+        """
+        Returns a package into a DList with the index idx
+        Complexity Worse Case: O(n)
+        Complexity Best Case: O(1)
+        """
+        return self.__packets.getAt(idx)
+    
     @property
     def identifier(self):
         return self.__identifier
@@ -52,10 +106,6 @@ class DSMember():
     @property
     def surname(self):
         return self.__surname
-        
-    def fullname(self):
-        s = self.__surname + " "  + self.__name 
-        return s
     
     @property
     def status(self):
@@ -68,8 +118,4 @@ class DSMember():
     def zones(self):
         return self.__zones
     
-    def packetSize(self):
-        return self.__packets.size
-    
-    def getPacket(self, idx):
-        return self.__packets.getAt(idx)
+

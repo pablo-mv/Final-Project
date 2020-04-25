@@ -8,6 +8,12 @@ from random import randint
 
 
 def compleateTest():
+    """
+    Takes a test of all the methods of the AmazonManagement class.
+    Complexity Best Case: O(n^3)
+    Complexity Worst Case: O(n^3)
+    """
+    
     print('Creating instance of Amazon')
     amazon = AmazonManagement()
     
