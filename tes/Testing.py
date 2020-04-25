@@ -1,7 +1,6 @@
 import sys
 sys.path.append('../')
 from AmazonManagement import AmazonManagement
-from srs.collection.DSMembers import DSMembers
 from srs.collection.DoublyLinkedList import DList
 from srs.collection.DSMember import DSMember
 from srs.collection.Package import Packet
@@ -88,3 +87,4 @@ def compleateTest():
     input('Showing Members. Press enter to continue')
     amazon.showDSMember()
 
+compleateTest()

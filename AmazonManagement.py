@@ -106,6 +106,3 @@ class AmazonManagement():
                     self.__Incidents.addLast(Incidents(current_packet.number, '', 'Staff unavailable')) #currentPacket
                     print("The packet " + str(current_packet.number()) + "has been removed due to staff not being available") # currentPacket
         self.__DSMembers.addLast(distributor)                             
-
-
-        
