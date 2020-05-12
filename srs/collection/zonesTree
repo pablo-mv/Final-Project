@@ -170,3 +170,79 @@ class zoneTree():
         else:
             array = zone.distributorList()
             array.pop(array.index(dist))
+           
+    def showDistributor(self,node):
+        node = zoneNode
+        distList = node.distributorList
+        sortedList = []
+        for i in range(len(distList)):
+            currentDist = distList[i]
+            sortedList.append(currentDist.fullname())
+        sortedList.sort()
+        s = "The distributors of this zone are: \n"
+        for i in sortedList:
+            s = s + i + "\n"
+        return s
+    
+    def isBalanced_Size(self, node):
+        if self.nodeSize(node.Left) - self.nodeSize(node.Right) <= 1 and self.nodeSize(node.Left) - self.nodeSize(node.Right) >= -1:
+            return True
+        elif self.nodeSize(node.Left) - self.nodeSize(node.Right) > 1:
+            return "l"
+        elif self.nodeSize(node.Left) - self.nodeSize(node.Right) < -1:
+            return "r"
+    
+    def isBalanced(self, node):
+        state = self.isBalanced_Size(node)
+        if state:
+            if node.Left != None:
+                self.balanceSize_Subtree(node.Left,)
+            if node.Right != None:
+                self.balanceSize_Subtree(node.Right,)
+                
+                
+        elif state == "l":
+            newroot = node.Left
+            while newroot.Right != None:
+                newroot = newroot.Right
+                
+            newroot.parent = node.parent
+            newroot.Left = node.Left
+            newroot.Right = node.Right
+            if node == self.__root:
+                self.__root = newroot
+                
+            newparent = node.Right
+            while newparent.Left != None:
+                newparent = newparent.Left
+            
+            node.parent = newparent
+            node.Left = None
+            node.Right = None
+            newparent.Left = node
+            
+            
+        elif state == "r":
+            newroot = node.Right
+            while newroot.Left != None:
+                newroot = newroot.Left
+                
+            newroot.parent = node.parent
+            newroot.Right = node.Right
+            newroot.Left = node.Left
+            if node == self.__root:
+                self.__root = newroot
+                
+            newparent = node.Left
+            while newparent.Right != None:
+                newparent = newparent.Right
+            
+            node.parent = newparent
+            node.Left = None
+            node.Right = None
+            newparent.Left = node
+                
+        
+        
+        
+    
