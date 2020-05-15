@@ -66,7 +66,7 @@ class DList:
         if n <= self.size:
             currentNode = self.head
             i = 1
-            while i < n:
+            while i <= n:
                 currentNode = currentNode.next
                 i = i + 1
             r = currentNode.elem
@@ -86,7 +86,7 @@ class DList:
         return con
     
     def insertAt(self,n,e):
-        if n == 1:
+        if n == 0:
             self.addFirst(e)
         elif n == self.size:
             self.addLast(e)
@@ -104,19 +104,21 @@ class DList:
             self.size = self.size + 1
             
     def removeAt(self,n):
-        if n == 1:
+        if n == 0:
             r = self.removeFirst()
-        elif n == self.size:
+        elif n == self.size - 1:
             r = self.removeLast()
         else:
             i = 1
             currentNode = self.head
-            while i < n:
+            while i <= n:
                 currentNode = currentNode.next
                 i = i + 1
             r = currentNode.elem
-            currentNode.prev.next = currentNode.next
-            currentNode.next.prev = currentNode.prev
+            prevNode = currentNode.prev
+            nextNode = currentNode.next
+            prevNode.next = nextNode
+            nextNode.prev = prevNode
             self.size = self.size - 1
         return r
                 
@@ -132,4 +134,3 @@ class DList:
             s += str(currentNode.elem)  + '>'
         return s
         
-    
