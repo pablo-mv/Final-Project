@@ -76,7 +76,7 @@ class DSMember():
         Complexity Worse Case: O(1)
         Complexity Best Case: O(1)
         """
-        s = self.__surname + " "  + self.__name 
+        s = self.__surname + ", "  + self.__name 
         return s
     
     def packetSize(self):
@@ -117,5 +117,8 @@ class DSMember():
     @property
     def zones(self):
         return self.__zones
-    
 
+e = 1
+for i in range(0):
+    e = e + 1
+print(e)
