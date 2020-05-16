@@ -15,20 +15,32 @@ class DSMember():
         __zones: (Dlist) Contains the zones the member has assignated
         __packets: (DList) Contains the list of packets to be delivered
     """
-    def __init__(self, ident, name, surname, status, nexts = None, prev = None):
-        if isinstance(ident, int) and len(str(ident)) <= 6:
+    def __init__(self, ident, name, surname, status, zones=None, packets=None, nexts = None, prev = None):
+        if (isinstance(ident, int) and len(str(ident)) <= 6):
             ceros_extra = 6 - len(str(ident))
             ceros = ''
             for _ in range (ceros_extra):
                 ceros += '0'
             self.__identifier = "R" + ceros +str(ident)
+            self.__id = ident
         else:
             print("Error - identifier must follow the structure XXXXXX, with X being a number")
+            self.__id = 999999
+
         self.__name = name
         self.__surname = surname
         self.__status = status
-        self.__zones = DList()
-        self.__packets = DList()
+
+        if packets == None:
+            self.__packets = DList()
+        else:
+            self.__packets = packets
+        
+        if zones == None:
+            self.__zones = DList()
+        else:
+            self.__zones = zones
+        
         self.next = nexts
         self.prev = prev
         surname
@@ -103,7 +115,7 @@ class DSMember():
     
     @property
     def identifier(self):
-        return self.__identifier
+        return self.__id
     
     @property
     def name(self):
@@ -123,6 +135,10 @@ class DSMember():
     @property
     def zones(self):
         return self.__zones
+    
+    @property
+    def packets(self):
+        return self.__packets
     
         
     
@@ -158,13 +174,13 @@ class DSMembers():
         """
         return self.__size == 0
     
-    def addFirst(self,ident, name, surname, status):
+    def addFirst(self,ident, name, surname, status, zones = None, packets = None):
         """
         Inserts a DSMember in the first place
         Complexity Best Case: O(1)
         Complexity Worst Case: O(1)
         """
-        newNode = DSMember(ident, name, surname, status)
+        newNode = DSMember(ident, name, surname, status, zones, packets)
         if self.isEmpty():
             self.__head = newNode
             self.__tail = newNode
@@ -174,16 +190,16 @@ class DSMembers():
             self.__head = newNode
         self.__size = self.__size + 1
 
-    def addLast(self, ident, name, surname, status):
+    def addLast(self, ident, name, surname, status, zones = None, packets = None):
         """
         Inserts a DSMember in the last place
         Complexity Best Case: O(1)
         Complexity Worst Case: O(1)
         """
         if self.isEmpty():
-            self.addFirst(ident, name, surname, status)
+            self.addFirst(ident, name, surname, status, zones = None, packets = None)
         else:
-            newNode = DSMember(ident, name, surname, status)
+            newNode = DSMember(ident, name, surname, status, zones , packets )
             self.__tail.next = newNode
             newNode.prev = self.__tail
             self.__tail = newNode
@@ -262,18 +278,18 @@ class DSMembers():
             i = i + 1
         return r
     
-    def insertAt(self, n, ident, name, surname, status):
+    def insertAt(self, n, ident, name, surname, status, zones = None, packets = None):
         """
         Inserts a DSMember in the position n
         Complexity Best Case: O(1)
         Complexity Worst Case: O(n)
         """
         if n == 0:
-            self.addFirst(ident, name, surname, status)
+            self.addFirst(ident, name, surname, status, zones, packets)
         elif n >= self.__size:
-            self.addLast(ident, name, surname, status)
+            self.addLast(ident, name, surname, status, zones, packets)
         else:
-            newNode = DSMember(ident, name, surname, status)
+            newNode = DSMember(ident, name, surname, status, zones, packets)
             i = 1
             currentNode = self.__head
             while i < n:
@@ -308,44 +324,54 @@ class DSMembers():
             nextNode.prev = prevNode
             self.__size = self.__size - 1
         return r
-    
+
     def sortAlphabeticalSurname(self):
         """
         Is a kind of bubble sort with letters.
         Complexity Worse Case: O(n^2)
         Complexity Best Case: O(n^2)
-        """ 
-        print("Trial -------------------------- \n")
-        if self.size != 0:
-            currentNode = self.__head
-            for i in range(self.__size):
-                for j in range(i):
-                    print(self, end = '\n++++++++++++\n')
-                    currentNode = currentNode.next
-                
-                if currentNode != None:
-                    if currentNode.prev != None:
-                        currentSurname = currentNode.surname
-                        prevSurname = currentNode.prev.surname
-                        while currentSurname < prevSurname:
+        """
+        for _ in range(self.size):
+
+            if self.__head != None:    
+                currentNode = self.__head
+                nextNode = self.__head.next
+                if nextNode != None:
+                    i = self.size -1
+                    while i > 0:
+                        if currentNode.surname > nextNode.surname:
+                            isHead = isTail = False
+                            try:
+                                currentNode.prev.next = nextNode
+                            except:
+                                isHead = True
+
+                            try:
+                                nextNode.next.prev = currentNode
+                            except:
+                                isTail = True
+
+                            currentNode.next = nextNode.next
+                            nextNode.prev = currentNode.prev
                             
-                            currentNode.prev.prev = currentNode.
-                            """prevNode = currentNode.prev
-                            prev_prev = prevNode.prev
-                            current_next = currentNode.next
-                            currentNode.prev = prev_prev
-                            prevNode.next = current_next
-                            currentNode.next = prevNode
-                            prevNode.prev = currentNode"""
                             
-                            if currentNode.prev == None:
+                            currentNode.prev = nextNode
+                            nextNode.next = currentNode
+                            
+                            aux = currentNode
+                            currentNode = nextNode
+                            nextNode = aux
+                            if isHead:
                                 self.__head = currentNode
-                            else:
-                                prevSurname = currentNode.prev.surname
-            currentNode = self.__head
-            while currentNode.next != None:
-                currentNode = currentNode.next
-            self.__tail = currentNode
+                            if isTail:
+                                self.__tail = nextNode
+                            
+
+                        currentNode = currentNode.next
+                        nextNode = nextNode.next
+                        i -= 1
+                    
+                    
     
     def removeById(self, identifier):
         result = None
@@ -354,7 +380,10 @@ class DSMembers():
         if currentNode != None:
             if currentNode.identifier == identifier:
                     result = currentNode
-                    currentNode.prev.next = None
+                    try:
+                        currentNode.prev.next = None
+                    except:
+                        pass
                     self.__tail = currentNode.prev
         
         currentNode = self.__head
@@ -363,37 +392,40 @@ class DSMembers():
                     result = currentNode
                     currentNode.next.prev = None
                     self.__head = currentNode.next
-            
-            while currentNode.next != None:
-                if currentNode.identifier == identifier:
-                    result = currentNode
-                    currentNode.prev.next = currentNode.next
-                    currentNode.next.prev = currentNode.prev
-                currentNode = currentNode.next
+            else:
+                while currentNode.next != None:
+                    if currentNode.identifier == identifier:
+                        result = currentNode
+                        currentNode.prev.next = currentNode.next
+                        currentNode.next.prev = currentNode.prev
+                    currentNode = currentNode.next
 
         if result != None:
-            self.size -= 1
+            self.__size -= 1
+            
         return result
             
     @property
     def size(self):
         return self.__size                
                     
+    @property
+    def head(self):
+        return self.__head
     
-    
-        
-        
+"""        
+
 lis = DSMembers()        
 print(lis.isEmpty())     
 lis.addFirst(1,"Pablo","Morales","active")
 lis.addLast(2,"Cristopher","Manzanos","active")
 lis.insertAt(1,3,"Alejandro", "Pares", "active")
 #print(lis.getAt(0))
-#print("\n")
+print("\n")
 #print(lis.getAt(1))
-#print("\n")
+print("\n")
 #print(lis.getAt(2))
-#print("-------------------- \n")   
+print("-------------------- \n")  
 lis.sortAlphabeticalSurname()
 print("\n")
 print(lis.getAt(0))
@@ -402,7 +434,7 @@ print(lis.getAt(1))
 print("\n")
 print(lis.getAt(2))
 
-        
+"""
         
 
 

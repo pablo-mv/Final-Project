@@ -51,7 +51,7 @@ class AmazonManagement():
         self.__DSMembers.sortAlphabeticalSurname()  # n^2
         for i in range(self.__DSMembers.size):
             currentName = self.__DSMembers.getAt((i+1)%self.__DSMembers.size)
-            print(currentName, end = '\n\n')
+            print(currentName, end = '-----------------------------\n')
 
     def assignDistribution(self): 
         """
@@ -62,27 +62,34 @@ class AmazonManagement():
         """
         for _ in range(self.__Orders.size):
             current_packet = self.__Orders.removeFirst()
-            i = 1
+            i = 0
             indx_member_size = [-1,999999]
             con = False
             n = self.__DSMembers.size
-            while i <=n:
+            while i <n:
+                
                 current_staff = self.__DSMembers.removeFirst()
+                print(i)
                 if current_staff.zones.contains(current_packet.post_code) and current_staff.status == 'Active':
                     current_staff.assign_packet(current_packet)
                     con = True
- 
+                    
+                
                 elif current_staff.zones.size < indx_member_size[1] and current_staff.status == 'Active':
+                    
                     indx_member_size = [i, current_staff.zones.size]
+                    print(indx_member_size)
                     
                 i += 1
-                self.__DSMembers.addLast(current_staff.identifier, current_staff.name, current_staff.surname, current_staff.status)
+                self.__DSMembers.addLast(current_staff.identifier, current_staff.name, current_staff.surname, current_staff.status, current_staff.zones, current_staff.packets)
                 
             if indx_member_size[0] != -1 and not con:  # could be n
+                print('Entré')
+                
                 staff_free = self.__DSMembers.removeAt((indx_member_size[0]))
                 staff_free.assing_zone(current_packet.post_code)
                 staff_free.assign_packet(current_packet)
-                self.__DSMembers.insertAt((indx_member_size[0]), staff_free.identifier, staff_free.name, staff_free.surname, staff_free.status)
+                self.__DSMembers.insertAt((indx_member_size[0]), staff_free.identifier, staff_free.name, staff_free.surname, staff_free.status, staff_free.zones, staff_free.packets)
                 
             
 
@@ -127,7 +134,7 @@ class AmazonManagement():
         Complexity Worse Case: O(n^2)
         Complexity Best Case: O(n^2)
         """
-        for i in range(self.__DSMembers.size):
+        for _ in range(self.__DSMembers.size):
             member = self.__DSMembers.removeFirst()
             updated_member = self.deliverPackages(member)
             self.__DSMembers.addLast(updated_member.identifier, updated_member.name, updated_member.surname, updated_member.status)
@@ -145,8 +152,8 @@ class AmazonManagement():
             for _ in range(distributor.packetSize()):
                 current_packet = distributor.deliver_packet()
                 con = False
-                i = 1
-                while not con and i <= self.__DSMembers.size:
+                i = 0
+                while not con and i < self.__DSMembers.size:
                     current_staff = self.__DSMembers.getAt(i)
                     if current_staff.zones.contains(current_packet.post_code):
                         con = True
@@ -155,4 +162,4 @@ class AmazonManagement():
                 if not con:
                     self.__Incidents.addLast(Incidents(current_packet.number, '', 'Staff unavailable')) #currentPacket
                     print("The packet " + str(current_packet.number()) + "has been removed due to staff not being available") # currentPacket
-        self.__DSMembers.addLast(distributor.identifier, distributor.name, distributor.surname, distributor.satus)                             
+        self.__DSMembers.addLast(distributor.identifier, distributor.name, distributor.surname, distributor.status)                             

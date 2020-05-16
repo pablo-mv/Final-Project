@@ -61,7 +61,7 @@ def compleateTest():
         surname = lastnames_members[randint(0,9)]
         stat = status[randint(0,2)]
         identifier = randint(0, 999999)
-        members.addLast(DSMember(identifier, name, surname, stat))
+        members.addLast((identifier, name, surname, stat))
     testing_member = members.getAt(randint(0,num_members-1))   
     
     
@@ -74,7 +74,6 @@ def compleateTest():
     
     print('')
     amazon.showDSMember()
-    
     input('Assigning packets to members. Pulse enter to continue')
     amazon.assignDistribution()
     input('Showing Members. Press enter to continue')
@@ -84,7 +83,7 @@ def compleateTest():
     input('Info of the member, press enter')
     print(testing_member)
     input('Excecuting removeDSMember, press enter to continue')
-    amazon.removeDSMember(testing_member.identifier)
+    amazon.removeDSMember(testing_member[0])
     
     input('Showing Members. Press enter to continue')
     amazon.showDSMember()
