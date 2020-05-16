@@ -2,7 +2,6 @@ import sys
 import os
 sys.path.append(os.getcwd())
 
-#from srs.collection.DSMember import DSMember
 from srs.collection.DoublyLinkedList import DList
 
 class DSMember():
