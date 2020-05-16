@@ -1,5 +1,7 @@
 import sys
-sys.path.append('../')
+import os
+sys.path.append(os.getcwd())
+print(sys.path)
 from AmazonManagement import AmazonManagement
 from srs.collection.DoublyLinkedList import DList
 from srs.collection.DSMember import DSMember

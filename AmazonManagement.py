@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.getcwd())
+
 from srs.collection.DSMembers import DSMembers
 from srs.collection.DoublyLinkedList import DList
 from srs.collection.Delivered import Delivered
@@ -25,7 +29,7 @@ class AmazonManagement():
         Complexity Worse Case: O(n)
         Complexity Best Case: O(n)
         """
-        for i in range(orders.size):
+        for _ in range(orders.size):
             self.__Orders.addLast(orders.removeFirst())
           
     def loadDSMembers(self, members):
@@ -34,8 +38,8 @@ class AmazonManagement():
         Complexity Worse Case: O(n)
         Complexity Best Case: O(n)
         """
-        for i in range(members.size):
-            self.__DSMembers.addLast(members.removeFirst())
+        for _ in range(members.size):
+            self.__DSMembers.addLast(*members.removeFirst())
                    
     def showDSMember(self):
         """
@@ -72,13 +76,13 @@ class AmazonManagement():
                     indx_member_size = [i, current_staff.zones.size]
                     
                 i += 1
-                self.__DSMembers.addLast(current_staff)
+                self.__DSMembers.addLast(current_staff.identifier, current_staff.name, current_staff.surname, current_staff.status)
                 
             if indx_member_size[0] != -1 and not con:  # could be n
                 staff_free = self.__DSMembers.removeAt((indx_member_size[0]))
                 staff_free.assing_zone(current_packet.post_code)
                 staff_free.assign_packet(current_packet)
-                self.__DSMembers.insertAt((indx_member_size[0]), staff_free)
+                self.__DSMembers.insertAt((indx_member_size[0]), staff_free.identifier, staff_free.name, staff_free.surname, staff_free.status)
                 
             
 
@@ -126,7 +130,7 @@ class AmazonManagement():
         for i in range(self.__DSMembers.size):
             member = self.__DSMembers.removeFirst()
             updated_member = self.deliverPackages(member)
-            self.__DSMembers.addLast(updated_member)
+            self.__DSMembers.addLast(updated_member.identifier, updated_member.name, updated_member.surname, updated_member.status)
             
     def removeDSMember(self,identifier):
         """
@@ -137,7 +141,7 @@ class AmazonManagement():
         """
         distributor = self.__DSMembers.removeById(identifier) #w n, b 1
         distributor.status = 'Inactive'
-        if distributor.packetSize != 0: #w n, b 1
+        if distributor.packetSize() != 0: #w n, b 1
             for _ in range(distributor.packetSize()):
                 current_packet = distributor.deliver_packet()
                 con = False
@@ -151,4 +155,4 @@ class AmazonManagement():
                 if not con:
                     self.__Incidents.addLast(Incidents(current_packet.number, '', 'Staff unavailable')) #currentPacket
                     print("The packet " + str(current_packet.number()) + "has been removed due to staff not being available") # currentPacket
-        self.__DSMembers.addLast(distributor)                             
+        self.__DSMembers.addLast(distributor.identifier, distributor.name, distributor.surname, distributor.satus)                             

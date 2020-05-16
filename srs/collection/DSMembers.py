@@ -1,5 +1,8 @@
-from DSMember import DSMember
+import sys
+import os
+sys.path.append(os.getcwd())
 
+#from srs.collection.DSMember import DSMember
 from srs.collection.DoublyLinkedList import DList
 
 class DSMember():
@@ -251,6 +254,7 @@ class DSMembers():
         """
         r = False
         currentNode = self.__head
+        i = 0
         while i < self.__size and not r:
             if currentNode == e:
                 r = True
@@ -312,36 +316,68 @@ class DSMembers():
         Complexity Best Case: O(n^2)
         """ 
         print("Trial -------------------------- \n")
-        currentNode = self.__head
-        for i in range(1, self.__size + 1):
-            for j in range(i):
-                currentNode = currentNode.next
-            
-            
-            if currentNode.prev != None:
-                con = True #Is the node in the first position?
-                currentSurname = currentNode.surname
-                prevSurname = currentNode.prev.surname
-                while currentSurname < prevSurname and con:
-                    prevNode = currentNode.prev
-                    prev_prev = prevNode.prev
-                    current_next = currentNode.next
-                    currentNode.prev = prev_prev
-                    prevNode.next = current_next
-                    currentNode.next = prevNode
-                    prevNode.prev = currentNode
-                    
-                    if currentNode.prev == None:
-                        con = False
-                        self.__head = currentNode
-                    else:
+        if self.size != 0:
+            currentNode = self.__head
+            for i in range(self.__size):
+                for j in range(i):
+                    print(self, end = '\n++++++++++++\n')
+                    currentNode = currentNode.next
+                
+                if currentNode != None:
+                    if currentNode.prev != None:
+                        currentSurname = currentNode.surname
                         prevSurname = currentNode.prev.surname
-        currentNode = self.__head
-        while currentNode.next != None:
-            currentNode = currentNode.next
-        self.__tail = currentNode
+                        while currentSurname < prevSurname:
+                            
+                            currentNode.prev.prev = currentNode.
+                            """prevNode = currentNode.prev
+                            prev_prev = prevNode.prev
+                            current_next = currentNode.next
+                            currentNode.prev = prev_prev
+                            prevNode.next = current_next
+                            currentNode.next = prevNode
+                            prevNode.prev = currentNode"""
+                            
+                            if currentNode.prev == None:
+                                self.__head = currentNode
+                            else:
+                                prevSurname = currentNode.prev.surname
+            currentNode = self.__head
+            while currentNode.next != None:
+                currentNode = currentNode.next
+            self.__tail = currentNode
+    
+    def removeById(self, identifier):
+        result = None
+
+        currentNode = self.__tail
+        if currentNode != None:
+            if currentNode.identifier == identifier:
+                    result = currentNode
+                    currentNode.prev.next = None
+                    self.__tail = currentNode.prev
         
-                    
+        currentNode = self.__head
+        if currentNode != None:
+            if currentNode.identifier == identifier:
+                    result = currentNode
+                    currentNode.next.prev = None
+                    self.__head = currentNode.next
+            
+            while currentNode.next != None:
+                if currentNode.identifier == identifier:
+                    result = currentNode
+                    currentNode.prev.next = currentNode.next
+                    currentNode.next.prev = currentNode.prev
+                currentNode = currentNode.next
+
+        if result != None:
+            self.size -= 1
+        return result
+            
+    @property
+    def size(self):
+        return self.__size                
                     
     
     
