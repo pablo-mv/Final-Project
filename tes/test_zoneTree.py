@@ -14,11 +14,24 @@ class TestAmazonManagment(unittest.TestCase):
 
         pass
 
-    def test_funcion(self):
+    def test_createZone(self):
         # Usa este formato, si no ponew test delante, no te reconce como un test
 
         
         assert True # assert es para comprobar si el test fue exitoso, recibe un boleano. La idea es poner: resulta == self.zoneTre.funcion()
         
+    def test_deleteZone(self):
+
+        assert True
+
+    def test_assignDistributor(self):
+
+        assert True
+
+    def test_isBalanced(self):
+
+        assert True
+    
+
 
 if __name__ == '__main__': unittest.main()  # No lo entinedo, pero hae falta
