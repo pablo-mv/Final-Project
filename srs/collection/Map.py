@@ -72,7 +72,6 @@ class Map:
     def _generateRoute(self, identifier, visited):
         visited[identifier] = True
 
-        print(self.__deliveryPoints[identifier])
 
         for adj in self.__deliveryPoints[identifier].getConections():
             if visited[adj[0]] == False:
