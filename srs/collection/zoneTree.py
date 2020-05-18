@@ -67,12 +67,12 @@ class zoneNode():
             s = s + name.fullname() + "; \n"
         return s
     
-    def assignDistributors(self, distributor):
+    def assignDistributors(self, ident, name, surname, status):
         """
         Adds a new distributor the the distributor list
         Complexity: 0(1)
         """
-        self.__distributors.addLast(distributor)
+        self.__distributors.addLast(ident, name, surname, status)
         
     def deleteDistributor(self, distributor):
         """
@@ -83,6 +83,17 @@ class zoneNode():
             self.__distributors.pop(self.__distributors.index(distributor))
         else:
             print("Distributor not found in this zone")
+            
+    def getDistributor(self,n):
+        return self.__distributors.getAt(n)
+    def distributorSize(self):
+        return self.__distributors.size
+    def removeDistAt(self,n):
+        return self.__distributors.removeAt(n)
+    def containsDist(self,dist):
+        return self.__distributors.contains(dist)
+    def removeDistID(self,ids):
+        return self.__distributors.removeById(ids)
             
 #------------------------------------------------------------------------------
 class zoneTree():
@@ -95,12 +106,12 @@ class zoneTree():
         self.__size = 0
         self.__root = None
         
-    def createZone(self, zone, node = None):
+    def createZone(self, zone_n, node = None):
         """
         Adds a new node to the tree, following the structure of a binary search tree
         Complexity: Worst O(log n), Best O(1)
         """
-        newZone = zoneNode(zone)
+        newZone = zoneNode(zone_n)
         if self.__size == 0:
             self.__root = newZone
             self.__size = self.__size + 1
@@ -110,20 +121,20 @@ class zoneTree():
             else:
                 currentNode = node
             
-            if zone < currentNode.zone:
-                if currentNode.Left() == None:
+            if zone_n < currentNode.zone:
+                if currentNode.Left == None:
                     currentNode.newChildLeft(newZone)
                     newZone.newParent(currentNode)
                     self.__size = self.__size + 1
                 else:
-                    self.createZone(zone, currentNode.Left())
-            elif zone > currentNode.zone:
+                    self.createZone(zone_n, currentNode.Left)
+            elif zone_n > currentNode.zone:
                 if currentNode.Right == None:
                     currentNode.newChildRight(newZone)
                     newZone.newParent(currentNode)
                     self.__size = self.__size + 1
                 else:
-                    self.createZone(zone, currentNode.Right)
+                    self.createZone(zone_n, currentNode.Right)
                 
     def showZones(self, node = None):
         """
@@ -148,49 +159,71 @@ class zoneTree():
         Returns the size of the subtree specified
         Complexity: Worst O(n^2), Best O(1)
         """
-        if node == None:
-            return -1
-        return 1 + self.nodeSize(node.Left) + self.nodeSize(node.Right)
+        if node != None:
+            return 1 + self.nodeSize(node.Left) + self.nodeSize(node.Right)
+        else:
+            return 0
             
     def succesorLeft(self,node):
+        """
+        Returns the highest value in its left subtree
+        Complextiy: O(n)
+        """
         currentNode = node.Left
-        while currentNode.Right() != None:
-            currentNode = currentNode.Right()
+        while currentNode.Right != None:
+            print(currentNode)
+            currentNode = currentNode.Right
         return currentNode
     
     def succesorRight(self,node):
+        """
+        Returns the lowest value in its right subtree
+        Complextiy: O(n)
+        """
         currentNode = node.Right
-        while currentNode.Left() != None:
-            currentNode = currentNode.Left()
+        while currentNode.Left != None:
+            print(currentNode)
+            currentNode = currentNode.Left
         return currentNode
     
     def findLowestAmountOfDistributors(self,node):
-        node = zoneNode
+        """
+        Finds the node with the lowest amount of distributors in this subtree
+        Complexity: Worst O(n^2), Best O(1)
+        """
         if node == None:
             return None, 0
         else:
-            nodeLeft, minLeft = self.findLowestAmountOfDistributors(node.Left())
-            nodeRight, minRight = self.findLowestAmountOfDistributors(node.Right())
-            if minLeft < len(node.distributorList()) and minLeft < minRight:
+            nodeLeft, minLeft = self.findLowestAmountOfDistributors(node.Left)
+            nodeRight, minRight = self.findLowestAmountOfDistributors(node.Right)
+            if minLeft < node.distributorSize() and minLeft < minRight:
                 return nodeLeft, minLeft
-            if minRight < len(node.distributorList()) and minRight < minLeft:
+            if minRight < node.distributorSize() and minRight < minLeft:
                 return nodeRight, minRight
-            if len(node.distributorList()) < minLeft and len(node.distributorList()) < minRight:
-                return node, len(node.distributorList())
+            if node.distributorSize() < minLeft and node.distributorSize < minRight:
+                return node, node.distributorSize
             
         
     def deleteZone(self, zone):
-        zone = zoneNode()
-        #Distributing the delivery men
-        for i  in range(len(zone.distributorList())//2):
-            nextNode = self.findLowestAmountOfDistributors(zone.Left)
-            array = zone.distributorList()
-            nextNode.assignDistributors(array.pop(i))
+        """
+        Returns the node with the lowest amount of distributors
+        """
+        if zone.Left != None and zone.Right != None:
+            for i  in range(zone.distributorSize()//2):
+                nextNode,dummy = self.findLowestAmountOfDistributors(zone.Left)
+                nextNode.assignDistributors(zone.removeDistAt(i))
             
-        for i  in range(len(zone.distributorList())//2, len(zone.distributorList())):
-            nextNode = self.findLowestAmountOfDistributors(zone.Right)
-            array = zone.distributorList()
-            nextNode.assignDistributors(array.pop(i))
+            for i  in range(zone.distributorSize()//2, zone.distributorSize()):
+                nextNode,dummy = self.findLowestAmountOfDistributors(zone.Right)
+                nextNode.assignDistributors(zone.removeDistAt(i))
+        elif zone.Left != None:
+             for i  in range(zone.distributorSize()):
+                nextNode,dummy = self.findLowestAmountOfDistributors(zone.Left)
+                nextNode.assignDistributors(zone.removeDistAt(i))
+        elif zone.Right != None:
+            for i  in range(zone.distributorSize()):
+                nextNode,dummy = self.findLowestAmountOfDistributors(zone.Right)
+                nextNode.assignDistributors(zone.removeDistAt(i))
             
         #Eliminating the zone
         if self.__size == 1:
@@ -220,17 +253,25 @@ class zoneTree():
             zone.newChildRight(None)
             
         
-    def assignsDistributor(self, zone, dist):
-        zone.assignDistributors(dist)
+    def assignsDistributor(self, zone, ident, name, surname, status):
+        """
+        Assins a distributor to a zone
+        """
+        zone.assignDistributors(ident, name, surname, status)
         
     def deleteDistributor(self,zone, dist):
-        if dist not in zone.distributorList():
+        """
+        Deletes a distributor
+        """
+        if not zone.containsDist(dist):
             print("Distributor not assigned to that zone")
         else:
-            array = zone.distributorList()
-            array.pop(array.index(dist))
+            zone.removeDistID(dist.identifier)
             
     def showDistributor(self,node):
+        """
+        Shows all of the distributors of a node
+        """
         node = zoneNode
         distList = node.distributorList
         sortedList = []
@@ -244,6 +285,9 @@ class zoneTree():
         return s
     
     def isBalanced_Size(self, node):
+        """
+        Checks if the tree is balanced by size, and returns a value accordingly
+        """
         if self.nodeSize(node.Left) - self.nodeSize(node.Right) <= 1 and self.nodeSize(node.Left) - self.nodeSize(node.Right) >= -1:
             return True
         elif self.nodeSize(node.Left) - self.nodeSize(node.Right) > 1:
@@ -252,68 +296,78 @@ class zoneTree():
             return "r"
     
     def isBalanced(self, node): #Doesnt work
+        """
+        Balances the tree if its not balanced
+        """
         state = self.isBalanced_Size(node)
-        if state:
+        while state != True:        
+            if state == "l":
+                oldRoot = self.__root
+                newRoot = self.succesorLeft(self.__root)
+                newRoot.newParent(None)
+                if oldRoot.Right != None:
+                    prevOldRoot = self.succesorRight(oldRoot)
+                    prevOldRoot.newChildLeft(oldRoot)
+                    oldRoot.newParent(prevOldRoot)
+                    newRoot.newChildRight(oldRoot.Right)
+                    oldRoot.newChildRight(None)
+                    newRoot.newChildLeft(oldRoot.Left)
+                    oldRoot.newChildLeft(None)
+                    self.__root = newRoot
+                else:
+                    if newRoot.Right != None:
+                        newRoot.newChildLeft(oldRoot.Left)
+                    newRoot.newChildRight(oldRoot)
+                    oldRoot.newParent(newRoot)
+                    oldRoot.newChildLeft(None)
+                    self.__root = newRoot
+            
+            
+            elif state == "r":
+                newRoot = self.succesorRight(self.__root)
+                oldRoot = self.__root
+                newRoot.newParent(None)
+                if oldRoot.Left != None:
+                    prevOldRoot = self.succesorLeft(oldRoot)
+                    prevOldRoot.newChildRight(oldRoot)
+                    oldRoot.newParent(prevOldRoot)
+                    newRoot.newChildLeft(oldRoot.Left)
+                    oldRoot.newChildLeft(None)
+                    newRoot.newChildRight(oldRoot.Right)
+                    oldRoot.newChildRight(None)
+                    self.__root = newRoot
+                else:
+                    if newRoot.Left != None:
+                        newRoot.newChildRight(oldRoot.Right)
+                    newRoot.newChildLeft(oldRoot)
+                    oldRoot.newParent(newRoot)
+                    oldRoot.newChildRight(None)
+                    self.__root = newRoot
+            
+        if state == True:
             if node.Left != None:
                 self.isBalanced(node.Left)
             if node.Right != None:
-                self.isBalanced(node.Right)
+                self.isBalanced(node.Right)    
                 
-                
-        elif state == "l":
-            newroot = node.Left
-            while newroot.Right != None:
-                newroot = newroot.Right
-                
-            newroot.parent = node.parent
-            newroot.Left = node.Left
-            newroot.Right = node.Right
-            if node == self.__root:
-                self.__root = newroot
-                
-            newparent = node.Right
-            while newparent.Left != None:
-                newparent = newparent.Left
-            
-            node.parent = newparent
-            node.Left = None
-            node.Right = None
-            newparent.Left = node
-            
-            
-        elif state == "r":
-            newroot = node.Right
-            while newroot.Left != None:
-                newroot = newroot.Left
-                
-            newroot.parent = node.parent
-            newroot.Right = node.Right
-            newroot.Left = node.Left
-            if node == self.__root:
-                self.__root = newroot
-                
-            newparent = node.Left
-            while newparent.Right != None:
-                newparent = newparent.Right
-            
-            node.parent = newparent
-            node.Left = None
-            node.Right = None
-            newparent.Left = node
-            
-    def head(self):
+         
+    @property        
+    def root(self):
         return self.__root
                 
         
 #------------------------------------------------
 tree = zoneTree()
 tree.createZone(1)
-print(tree.head()) 
-tree.createZone(2)
-print(tree.head()) 
-tree.createZone(3)
-tree.assignsDistributor(tree.head(),"1")
-tree.showZones()
+tree.createZone(5) 
+tree.createZone(4)
+tree.createZone(10)
+tree.createZone(40)
 
 
-       
+#print(tree.isBalanced_Size(tree.root))
+#tree.isBalanced(tree.root)
+#print(tree.succesorRight(tree.root))
+#tree.showZones()
+print(tree.root.Right.Left)
+
