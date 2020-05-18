@@ -78,14 +78,12 @@ class AmazonManagement():
                 elif current_staff.zones.size < indx_member_size[1] and current_staff.status == 'Active':
                     
                     indx_member_size = [i, current_staff.zones.size]
-                    print(indx_member_size)
                     
                 i += 1
                 self.__DSMembers.addLast(current_staff.identifier, current_staff.name, current_staff.surname, current_staff.status, current_staff.zones, current_staff.packets)
                 
             if indx_member_size[0] != -1 and not con:  # could be n
-                print('Entré')
-                
+ 
                 staff_free = self.__DSMembers.removeAt((indx_member_size[0]))
                 staff_free.assing_zone(current_packet.post_code)
                 staff_free.assign_packet(current_packet)

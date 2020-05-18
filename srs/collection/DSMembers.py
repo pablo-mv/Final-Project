@@ -378,29 +378,22 @@ class DSMembers():
         currentNode = self.__tail
         if currentNode != None:
             if currentNode.identifier == identifier:
-                    result = currentNode
-                    try:
-                        currentNode.prev.next = None
-                    except:
-                        pass
-                    self.__tail = currentNode.prev
-        
+                    result = self.removeLast()
+
         currentNode = self.__head
         if currentNode != None:
             if currentNode.identifier == identifier:
-                    result = currentNode
-                    currentNode.next.prev = None
-                    self.__head = currentNode.next
+                    self.removeFirst()
             else:
                 while currentNode.next != None:
                     if currentNode.identifier == identifier:
                         result = currentNode
                         currentNode.prev.next = currentNode.next
                         currentNode.next.prev = currentNode.prev
+                        self.__size -= 1
                     currentNode = currentNode.next
 
-        if result != None:
-            self.__size -= 1
+            
             
         return result
             
