@@ -120,17 +120,12 @@ class Map:
         self.printSolution(distances,previous,start, end)
 
     def minDistance(self, distances, visited): 
-        """This functions returns the vertex (index) whose associated value in
-        the dictionary distances is the smallest value. We 
-        only consider the set of vertices that have not been visited"""
-        # Initilaize minimum distance for next node 
         minimun = sys.maxsize 
-
-        #returns the vertex with minimum distance from the non-visited vertices
+        
         for vertex in self.__deliveryPoints.keys(): 
             if distances[vertex] <= minimun and visited[vertex] == False: 
-                minimun = distances[vertex] #update the new smallest
-                min_vertex = vertex     #update the index of the smallest
+                minimun = distances[vertex] 
+                min_vertex = vertex     
         return min_vertex
 
     def printSolution(self,distances,previous,origin, end): 
