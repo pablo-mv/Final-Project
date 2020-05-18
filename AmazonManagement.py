@@ -82,7 +82,7 @@ class AmazonManagement():
                 i += 1
                 self.__DSMembers.addLast(current_staff.identifier, current_staff.name, current_staff.surname, current_staff.status, current_staff.zones, current_staff.packets)
                 
-            if indx_member_size[0] != -1 and not con:  # could be n
+            if indx_member_size[0] != -1 and not con:  
  
                 staff_free = self.__DSMembers.removeAt((indx_member_size[0]))
                 staff_free.assing_zone(current_packet.post_code)
@@ -144,9 +144,9 @@ class AmazonManagement():
         Complexity Worse Case: O(n)
         Complexity Best Case: O(1)
         """
-        distributor = self.__DSMembers.removeById(identifier) #w n, b 1
+        distributor = self.__DSMembers.removeById(identifier) 
         distributor.status = 'Inactive'
-        if distributor.packetSize() != 0: #w n, b 1
+        if distributor.packetSize() != 0: 
             for _ in range(distributor.packetSize()):
                 current_packet = distributor.deliver_packet()
                 con = False
@@ -158,6 +158,6 @@ class AmazonManagement():
                         current_staff.assign_packet(current_packet)
                     i += 1
                 if not con:
-                    self.__Incidents.addLast(Incidents(current_packet.number, '', 'Staff unavailable')) #currentPacket
-                    print("The packet " + str(current_packet.number()) + "has been removed due to staff not being available") # currentPacket
+                    self.__Incidents.addLast(Incidents(current_packet.number, '', 'Staff unavailable')) 
+                    print("The packet " + str(current_packet.number()) + "has been removed due to staff not being available") 
         self.__DSMembers.addLast(distributor.identifier, distributor.name, distributor.surname, distributor.status)                             
