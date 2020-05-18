@@ -416,23 +416,4 @@ class DSMembers():
     def head(self):
         return self.__head
     
-"""        
-lis = DSMembers()        
-print(lis.isEmpty())     
-lis.addFirst(1,"Pablo","Morales","active")
-lis.addLast(2,"Cristopher","Manzanos","active")
-lis.insertAt(1,3,"Alejandro", "Pares", "active")
-#print(lis.getAt(0))
-print("\n")
-#print(lis.getAt(1))
-print("\n")
-#print(lis.getAt(2))
-print("-------------------- \n")  
-lis.sortAlphabeticalSurname()
-print("\n")
-print(lis.getAt(0))
-print("\n")  
-print(lis.getAt(1))
-print("\n")
-print(lis.getAt(2))
-"""
+
