@@ -87,3 +87,4 @@ class TestMap(unittest.TestCase):
         
         assert error == False
 
+if __name__ == '__main__': unittest.main()
