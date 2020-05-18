@@ -23,14 +23,29 @@ class deliveryPoint:
 
     def __str__(self):
         return str(self.street)+ ', ' + str(self.number) + ' ' + str(self.postalCode)
-    
+
+    def str2(self):
+        s = str(self.street)+ ', ' + str(self.number) + ' ' + str(self.postalCode) + 'Conected to: \n'
+        for i,j in list(self.neighbors.items()):
+            s += '  ' + i[:-7]+', '+ i[-7:-5]+' ' + i[-5:] + ' with distande of ' + str(j) + '\n'
+        return s
 
 class Map:
     def __init__(self):
         self.__deliveryPoints = {}
+
+    def __str__(self):
+        r = ''
+        for  i in iter(self):
+            r += i.str2() + '\n\n'
+        return r
     
     def __iter__(self):
-        return iter(self.__deliveryPoints.values())
+        return iter(list(self.__deliveryPoints.values()))
+
+    @property
+    def deliveryPoints(self):
+        return self.__deliveryPoints
 
     def addDeliveryPoint(self, newDeliveryPoint):
         if newDeliveryPoint.id not in self.__deliveryPoints.keys():
@@ -139,25 +154,3 @@ class Map:
                     #we print the path from v to i and the distance
                     print(origin,'->',j,":", minimum_path,distances[i])
 
-
-myMap = Map()
-v1 = deliveryPoint('A', 23, 28983)
-v2 = deliveryPoint('B', 23, 23422)
-v3 = deliveryPoint('C', 32, 33233)
-v4 = deliveryPoint('D', 34, 32421)
-v5 = deliveryPoint('E', 45, 32223)
-
-myMap.addDeliveryPoint(v1)
-myMap.addDeliveryPoint(v2)
-myMap.addDeliveryPoint(v3)
-myMap.addDeliveryPoint(v4)
-myMap.addDeliveryPoint(v5)
-
-myMap.addConection(v1, v3, 43)
-myMap.addConection(v1, v2, 4)
-myMap.addConection(v2, v3, 5)
-myMap.addConection(v2, v5, 3)
-myMap.addConection(v5, v4, 43)
-
-print(myMap.generateRoute())
-myMap.minRoute(v5, v1)
