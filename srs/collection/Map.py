@@ -28,9 +28,6 @@ class deliveryPoint:
 class Map:
     def __init__(self):
         self.__deliveryPoints = {}
-
-    def __str__(self):
-        pass
     
     def __iter__(self):
         return iter(self.__deliveryPoints.values())
@@ -60,22 +57,25 @@ class Map:
         return distance
         
     def generateRoute(self):
+
+        def _generateRoute(identifier, visited):
+            visited[identifier] = True
+            result.append(str(self.__deliveryPoints[identifier]))
+
+            for adj in self.__deliveryPoints[identifier].getConections():
+                if visited[adj[0]] == False:
+                    _generateRoute(adj[0], visited)
+
         visited = {}
+        result = []
         for point in self.__deliveryPoints.keys():
             visited[point] = False
         
         for identifier in self.__deliveryPoints.keys():
             if visited[identifier] == False:
-                self._generateRoute(identifier, visited)
-        
+                _generateRoute(identifier, visited)
 
-    def _generateRoute(self, identifier, visited):
-        visited[identifier] = True
-
-
-        for adj in self.__deliveryPoints[identifier].getConections():
-            if visited[adj[0]] == False:
-                self._generateRoute(adj[0], visited)
+        return result    
     
 
     def minRoute(self, start, end):
@@ -87,7 +87,7 @@ class Map:
             visited[i] = False
             previous[i] = None
             distances[i] = sys.maxsize
-        distances[start] = 0
+        distances[start.id] = 0
 
         for _ in range(len(self.__deliveryPoints)):
             u = self.minDistance(distances, visited)
@@ -96,12 +96,13 @@ class Map:
             for neighbor in list(self.__deliveryPoints[u].neighbors.items()): 
                 i=neighbor[0]
                 w=neighbor[1]
+
                 if visited[i]==False and distances[i]>distances[u]+w:
                     #we must update because its distance is greater than the new distance
                     distances[i]=distances[u]+w   
                     previous[i]=u
         
-        self.printSolution(distances,previous,start)
+        self.printSolution(distances,previous,start, end)
 
     def minDistance(self, distances, visited): 
         """This functions returns the vertex (index) whose associated value in
@@ -117,26 +118,26 @@ class Map:
                 min_vertex = vertex     #update the index of the smallest
         return min_vertex
 
-
-    
-    def printSolution(self,distances,previous,origin): 
-        print("Mininum path from ",origin)
+    def printSolution(self,distances,previous,origin, end): 
+        print("Mininum path from ",origin, 'to', end)
         for i, j in list(self.__deliveryPoints.items()):
-            if distances[i]==sys.maxsize:
-                print("There is not path from ",origin,' to ',j)
-            else: 
-                #minimum_path is the list wich contains the minimum path from v to i
-                minimum_path=[]
-                prev=previous[i]
-                #this loop helps us to build the path
-                while prev!=None:
-                    minimum_path.insert(0,prev)
-                    prev=previous[prev]
+            if j.id == end.id:
+                if distances[i]==sys.maxsize:
+                    print("There is not path from ",origin,' to ',j)
+                else: 
+                    #minimum_path is the list wich contains the minimum path from v to i
+                    minimum_path=[]
                 
-                #we append the last vertex, which is i
-                minimum_path.append(i)  
-                #we print the path from v to i and the distance
-                print(origin,'->',i,":", minimum_path,distances[i])
+                    prev=previous[j.id]
+                    #this loop helps us to build the path
+                    while prev!=None:
+                        minimum_path.insert(0,prev[:-7]+', '+ prev[-7:-5]+' ' + prev[-5:])
+                        prev=previous[prev]
+                    
+                    #we append the last vertex, which is i
+                    minimum_path.append(str(j))  
+                    #we print the path from v to i and the distance
+                    print(origin,'->',j,":", minimum_path,distances[i])
 
 
 myMap = Map()
@@ -158,5 +159,5 @@ myMap.addConection(v2, v3, 5)
 myMap.addConection(v2, v5, 3)
 myMap.addConection(v5, v4, 43)
 
-myMap.generateRoute()
-myMap.minRoute(v1, v5)
+print(myMap.generateRoute())
+myMap.minRoute(v5, v1)
