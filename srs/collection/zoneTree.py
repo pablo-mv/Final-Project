@@ -187,23 +187,6 @@ class zoneTree():
         while currentNode.Left != None:
             currentNode = currentNode.Left
         return currentNode
-    
-    def findLowestAmountOfDistributors(self,node):
-        """
-        Finds the node with the lowest amount of distributors in this subtree
-        Complexity: Worst O(n^2), Best O(1)
-        """
-        if node == None:
-            return None, 0
-        else:
-            nodeLeft, minLeft = self.findLowestAmountOfDistributors(node.Left)
-            nodeRight, minRight = self.findLowestAmountOfDistributors(node.Right)
-            if minLeft < node.distributorSize() and minLeft < minRight:
-                return nodeLeft, minLeft
-            if minRight < node.distributorSize() and minRight < minLeft:
-                return nodeRight, minRight
-            if node.distributorSize() < minLeft and node.distributorSize < minRight:
-                return node, node.distributorSize
             
         
     def deleteZone(self, zone):
@@ -220,17 +203,17 @@ class zoneTree():
         elif zone.Left != None and zone.Right != None:
             for i in range(zone.distributorSize()//2):
                 zone.Left.addWholeDistributor(zone.removeDistAt(0))
-            for i in range(zone.distributorSize()//2,2*zone.distributorSize()//3,):
+            for i in range(zone.distributorSize()//2,2*zone.distributorSize()//2,):
                 zone.Right.addWholeDistributor(zone.removeDistAt(0))
         elif zone.Left != None and zone.parent != None:
             for i in range(zone.distributorSize()//2):
                 zone.Left.addWholeDistributor(zone.removeDistAt(0))
-            for i in range(zone.distributorSize()//2,2*zone.distributorSize()//3,):
+            for i in range(zone.distributorSize()//2,2*zone.distributorSize()//2,):
                 zone.parent.addWholeDistributor(zone.removeDistAt(0))
         elif zone.Right != None and zone.parent != None:
             for i in range(zone.distributorSize()//2):
                 zone.Right.addWholeDistributor(zone.removeDistAt(0))
-            for i in range(zone.distributorSize()//2,2*zone.distributorSize()//3,):
+            for i in range(zone.distributorSize()//2,2*zone.distributorSize()//2,):
                 zone.parent.addWholeDistributor(zone.removeDistAt(0))
         elif zone.Left != None:
             for i in range(zone.distributorSize()):
@@ -369,24 +352,3 @@ class zoneTree():
         return self.__root
     
                 
-        
-#------------------------------------------------
-tree = zoneTree()
-tree.createZone(1)
-tree.createZone(5) 
-tree.createZone(4)
-tree.createZone(10)
-tree.createZone(50)
-
-#tree.showZones()
-
-tree.isBalanced(tree.root)
-#tree.showZones()
-print(tree.root)
-print(tree.root.Right)
-print(tree.root.Right.Right)
-print(tree.root.Right.Left)
-print(tree.root.Right.Right.Right)
-print(tree.root.Right.Right.Right.Right)
-print(tree.root.Left)
-print(tree.root.Left.Left)
